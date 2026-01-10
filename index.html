@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sagittarius</title>
+    <title>Eclipse</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/gn-math/gn-math.github.io@main/favicon.png">
     <script>
@@ -12,24 +13,30 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: '#8b5cf6',
-                        secondary: '#d946ef',
-                        accent: '#06b6d4',
+                        primary: 'var(--primary, #a855f7)',
+                        secondary: 'var(--secondary, #22d3ee)',
+                        accent: 'var(--accent, #ec4899)',
                         darkBg: '#020617'
                     },
                     animation: {
-                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'float': 'float 3s ease-in-out infinite',
-                        'glow': 'glow 2s ease-in-out infinite'
+                        'pulse-slow': 'pulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 8s ease-in-out infinite',
+                        'glow': 'glow 3s ease-in-out infinite',
+                        'spin-slow': 'spin 20s linear infinite',
+                        'reverse-spin': 'reverse-spin 25s linear infinite'
                     },
                     keyframes: {
                         float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-10px)' },
+                            '0%, 100%': { transform: 'translateY(0) scale(1)' },
+                            '50%': { transform: 'translateY(-20px) scale(1.05)' },
                         },
                         glow: {
-                            '0%, 100%': { textShadow: '0 0 10px rgba(139, 92, 246, 0.5)' },
-                            '50%': { textShadow: '0 0 25px rgba(139, 92, 246, 0.9)' },
+                            '0%, 100%': { textShadow: '0 0 15px rgba(168, 85, 247, 0.5)' },
+                            '50%': { textShadow: '0 0 35px rgba(34, 211, 238, 0.8)' },
+                        },
+                        'reverse-spin': {
+                            from: { transform: 'rotate(360deg)' },
+                            to: { transform: 'rotate(0deg)' }
                         }
                     }
                 }
@@ -39,11 +46,18 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
         
+        :root {
+            --primary: #a855f7;
+            --secondary: #22d3ee;
+            --accent: #ec4899;
+        }
+
         body {
             font-family: 'Space Grotesk', sans-serif;
             overflow-x: hidden;
             background-color: #020617;
             color: #f1f5f9;
+            transition: background-color 0.5s ease;
         }
 
         .animated-bg {
@@ -55,6 +69,32 @@
             z-index: -1;
             background: radial-gradient(circle at 50% 50%, #1e1b4b 0%, #020617 100%);
             overflow: hidden;
+            transition: filter 1s ease;
+        }
+
+        /* Eclipse Portal Effect */
+        .portal-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            border: 2px solid transparent;
+            border-top-color: rgba(168, 85, 247, 0.2);
+            border-bottom-color: rgba(34, 211, 238, 0.2);
+            filter: blur(2px);
+            transition: all 1s ease;
+        }
+
+        .nebula {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, transparent 70%);
+            filter: blur(80px);
+            border-radius: 50%;
+            pointer-events: none;
+            transition: background 1s ease;
         }
 
         .star {
@@ -63,31 +103,52 @@
             border-radius: 50%;
             opacity: 0.3;
             animation: twinkle var(--duration) infinite ease-in-out;
+            transition: background 1s ease;
+        }
+
+        /* Flying/Floating Star Effect */
+        .flying-star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.4;
+            pointer-events: none;
+            animation: fly var(--fly-duration) linear infinite;
+            transition: background 1s ease;
         }
 
         @keyframes twinkle {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.2); }
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.3); }
+        }
+
+        @keyframes fly {
+            from { transform: translateX(0) translateY(0); }
+            to { transform: translateX(var(--fly-x)) translateY(var(--fly-y)); }
         }
 
         .glass {
             background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.5s ease;
         }
 
-        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #020617; }
-        ::-webkit-scrollbar-thumb { background: #4c1d95; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #8b5cf6; }
+        ::-webkit-scrollbar-thumb { 
+            background: linear-gradient(to bottom, var(--primary), var(--secondary)); 
+            border-radius: 10px; 
+        }
 
         .game-card-shadow {
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .game-card-shadow:hover {
-            box-shadow: 0 0 30px 5px rgba(139, 92, 246, 0.3);
-            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 0 40px -5px rgba(168, 85, 247, 0.4), 0 0 20px -5px rgba(34, 211, 238, 0.3);
+            transform: translateY(-12px) scale(1.03);
+            border-color: rgba(168, 85, 247, 0.4);
         }
     </style>
     <script type="importmap">
@@ -98,25 +159,63 @@
     "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
     "lucide-react": "https://esm.sh/lucide-react@0.460.0",
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/"
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.35.0"
   }
 }
 </script>
 </head>
 <body class="dark">
-    <div class="animated-bg" id="star-field"></div>
+    <div class="animated-bg" id="bg-container">
+        <!-- Nebula Blobs -->
+        <div class="nebula animate-float" style="top: -10%; left: -10%;"></div>
+        <div class="nebula animate-float" style="bottom: -10%; right: -10%; animation-delay: -4s;"></div>
+        
+        <!-- Rotating Rings -->
+        <div class="portal-ring animate-spin-slow" style="width: 80vw; height: 80vw; opacity: 0.1;"></div>
+        <div class="portal-ring animate-reverse-spin" style="width: 60vw; height: 60vw; opacity: 0.05;"></div>
+        
+        <div id="star-field"></div>
+    </div>
     <div id="root"></div>
     <script>
         const field = document.getElementById('star-field');
-        for (let i = 0; i < 100; i++) {
+        
+        // Static/Twinkling Stars
+        for (let i = 0; i < 120; i++) {
             const star = document.createElement('div');
             star.className = 'star';
-            const size = Math.random() * 2 + 1;
+            const size = Math.random() * 2 + 0.5;
             star.style.width = size + 'px';
             star.style.height = size + 'px';
             star.style.top = Math.random() * 100 + '%';
             star.style.left = Math.random() * 100 + '%';
-            star.style.setProperty('--duration', (3 + Math.random() * 4) + 's');
+            star.style.setProperty('--duration', (2 + Math.random() * 5) + 's');
+            field.appendChild(star);
+        }
+
+        // Flying/Floating Stars
+        for (let i = 0; i < 40; i++) {
+            const star = document.createElement('div');
+            star.className = 'flying-star';
+            const size = Math.random() * 1.5 + 0.5;
+            star.style.width = size + 'px';
+            star.style.height = size + 'px';
+            
+            // Random start position
+            star.style.top = Math.random() * 100 + '%';
+            star.style.left = Math.random() * 100 + '%';
+            
+            // Random movement vector
+            const angle = Math.random() * Math.PI * 2;
+            const distance = 200 + Math.random() * 300;
+            const x = Math.cos(angle) * distance;
+            const y = Math.sin(angle) * distance;
+            
+            star.style.setProperty('--fly-x', `${x}px`);
+            star.style.setProperty('--fly-y', `${y}px`);
+            star.style.setProperty('--fly-duration', (15 + Math.random() * 30) + 's');
+            
             field.appendChild(star);
         }
     </script>

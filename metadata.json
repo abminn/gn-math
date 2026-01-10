@@ -1,5 +1,9 @@
 {
-  "name": "GN-Math Gaming Hub",
-  "description": "A modern, high-performance web application for browsing and playing unblocked games. Features featured zones, searching, sorting by popularity, and advanced tab cloaking for a seamless browser experience.",
-  "requestFramePermissions": []
+  "name": "Sagittarius Gaming Hub",
+  "description": "A high-performance gaming proxy and hub featuring unblocked access to the GN-Math library. Built for speed, stealth, and style.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ]
 }

@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GN-Math</title>
+    <title>Sagittarius</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/gn-math/gn-math.github.io@main/favicon.png">
     <script>
@@ -13,42 +12,114 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: '#fc2651',
+                        primary: '#8b5cf6',
+                        secondary: '#d946ef',
+                        accent: '#06b6d4',
+                        darkBg: '#020617'
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 3s ease-in-out infinite',
+                        'glow': 'glow 2s ease-in-out infinite'
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        glow: {
+                            '0%, 100%': { textShadow: '0 0 10px rgba(139, 92, 246, 0.5)' },
+                            '50%': { textShadow: '0 0 25px rgba(139, 92, 246, 0.9)' },
+                        }
                     }
                 }
             }
         }
     </script>
     <style>
-        .zone-iframe-container {
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            overflow-x: hidden;
+            background-color: #020617;
+            color: #f1f5f9;
+        }
+
+        .animated-bg {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 1000;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 50% 50%, #1e1b4b 0%, #020617 100%);
+            overflow: hidden;
         }
-        .lazy-zone-img {
-            filter: blur(5px);
-            transition: filter 0.3s;
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: twinkle var(--duration) infinite ease-in-out;
         }
-        .lazy-zone-img.loaded {
-            filter: blur(0);
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .glass {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #020617; }
+        ::-webkit-scrollbar-thumb { background: #4c1d95; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #8b5cf6; }
+
+        .game-card-shadow {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .game-card-shadow:hover {
+            box-shadow: 0 0 30px 5px rgba(139, 92, 246, 0.3);
+            transform: translateY(-8px) scale(1.02);
         }
     </style>
-<script type="importmap">
+    <script type="importmap">
 {
   "imports": {
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "react": "https://esm.sh/react@^19.2.3",
-    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
+    "react": "https://esm.sh/react@19.0.0",
+    "react-dom": "https://esm.sh/react-dom@19.0.0",
+    "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
+    "lucide-react": "https://esm.sh/lucide-react@0.460.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/"
   }
 }
 </script>
 </head>
-<body class="bg-white dark:bg-[#181818] text-gray-900 dark:text-gray-100 transition-colors duration-300">
+<body class="dark">
+    <div class="animated-bg" id="star-field"></div>
     <div id="root"></div>
+    <script>
+        const field = document.getElementById('star-field');
+        for (let i = 0; i < 100; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            const size = Math.random() * 2 + 1;
+            star.style.width = size + 'px';
+            star.style.height = size + 'px';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.setProperty('--duration', (3 + Math.random() * 4) + 's');
+            field.appendChild(star);
+        }
+    </script>
     <script type="module" src="/index.tsx"></script>
 </body>
 </html>

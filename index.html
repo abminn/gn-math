@@ -4,39 +4,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eclipse</title>
+    <title id="tab-title">Eclipse | Standalone</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/gn-math/gn-math.github.io@main/favicon.png">
+    <link id="tab-icon" rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/gn-math/gn-math.github.io@main/favicon.png">
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        primary: 'var(--primary, #a855f7)',
-                        secondary: 'var(--secondary, #22d3ee)',
-                        accent: 'var(--accent, #ec4899)',
-                        darkBg: '#020617'
+                        primary: 'var(--primary)',
+                        secondary: 'var(--secondary)',
+                        accent: 'var(--accent)',
+                        surface: 'var(--card-bg)'
                     },
                     animation: {
-                        'pulse-slow': 'pulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'float': 'float 8s ease-in-out infinite',
-                        'glow': 'glow 3s ease-in-out infinite',
-                        'spin-slow': 'spin 20s linear infinite',
-                        'reverse-spin': 'reverse-spin 25s linear infinite'
+                        'ripple': 'ripple 0.4s cubic-bezier(0, 0, 0.2, 1) forwards',
+                        'slide-up': 'slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'toast': 'toastIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
+                        'fade-in': 'fadeIn 0.3s ease-out forwards',
+                        'pulse-glow': 'pulseGlow 2.5s ease-in-out infinite'
                     },
                     keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0) scale(1)' },
-                            '50%': { transform: 'translateY(-20px) scale(1.05)' },
+                        ripple: {
+                            '0%': { transform: 'scale(0)', opacity: '0.3' },
+                            '100%': { transform: 'scale(4)', opacity: '0' }
                         },
-                        glow: {
-                            '0%, 100%': { textShadow: '0 0 15px rgba(168, 85, 247, 0.5)' },
-                            '50%': { textShadow: '0 0 35px rgba(34, 211, 238, 0.8)' },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(30px) scale(0.98)' },
+                            '100%': { opacity: '1', transform: 'translateY(0) scale(1)' }
                         },
-                        'reverse-spin': {
-                            from: { transform: 'rotate(360deg)' },
-                            to: { transform: 'rotate(0deg)' }
+                        toastIn: {
+                            '0%': { transform: 'translateY(100%) scale(0.9)', opacity: '0' },
+                            '100%': { transform: 'translateY(0) scale(1)', opacity: '1' }
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' }
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { textShadow: '0 0 10px var(--glow), 0 0 20px var(--glow)' },
+                            '50%': { textShadow: '0 0 15px var(--glow), 0 0 30px var(--glow)' }
                         }
                     }
                 }
@@ -44,178 +52,653 @@
         }
     </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
         
         :root {
             --primary: #a855f7;
             --secondary: #22d3ee;
-            --accent: #ec4899;
+            --bg-color: #020617;
+            --card-bg: rgba(15, 23, 42, 0.2);
+            --glow: #a855f7;
+            --admin-red: #ef4444;
+        }
+
+        [data-theme='amoled'] {
+            --primary: #ffffff;
+            --bg-color: #000000;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --glow: #ffffff;
+        }
+
+        [data-theme='cyber'] {
+            --primary: #06b6d4;
+            --bg-color: #010409;
+            --card-bg: rgba(6, 182, 212, 0.08);
+            --glow: #06b6d4;
+        }
+
+        [data-theme='retro'] {
+            --primary: #f59e0b;
+            --bg-color: #1a1a1a;
+            --card-bg: rgba(245, 158, 11, 0.1);
+            --glow: #f59e0b;
+        }
+
+        body[data-admin="true"] {
+            --primary: #ef4444;
+            --bg-color: #050000;
+            --card-bg: rgba(239, 68, 68, 0.03);
+            --glow: #ef4444;
         }
 
         body {
             font-family: 'Space Grotesk', sans-serif;
-            overflow-x: hidden;
-            background-color: #020617;
+            background-color: var(--bg-color);
             color: #f1f5f9;
-            transition: background-color 0.5s ease;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-x: hidden;
+            cursor: default !important;
         }
 
-        .animated-bg {
+        #bg-canvas {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             z-index: -1;
-            background: radial-gradient(circle at 50% 50%, #1e1b4b 0%, #020617 100%);
-            overflow: hidden;
-            transition: filter 1s ease;
-        }
-
-        .portal-ring {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            border-radius: 50%;
-            border: 2px solid transparent;
-            border-top-color: rgba(168, 85, 247, 0.2);
-            border-bottom-color: rgba(34, 211, 238, 0.2);
-            filter: blur(2px);
-            transition: all 1s ease;
-        }
-
-        .nebula {
-            position: absolute;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, transparent 70%);
-            filter: blur(80px);
-            border-radius: 50%;
             pointer-events: none;
-            transition: background 1s ease;
-        }
-
-        .star {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            opacity: 0.3;
-            animation: twinkle var(--duration) infinite ease-in-out;
-            transition: background 1s ease;
-        }
-
-        .flying-star {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            opacity: 0.4;
-            pointer-events: none;
-            animation: fly var(--fly-duration) linear infinite;
-            transition: background 1s ease;
-        }
-
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.2; transform: scale(1); }
-            50% { opacity: 0.8; transform: scale(1.3); }
-        }
-
-        @keyframes fly {
-            from { transform: translateX(0) translateY(0); }
-            to { transform: translateX(var(--fly-x)) translateY(var(--fly-y)); }
         }
 
         .glass {
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.5s ease;
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
         }
 
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #020617; }
-        ::-webkit-scrollbar-thumb { 
-            background: linear-gradient(to bottom, var(--primary), var(--secondary)); 
-            border-radius: 10px; 
+        body[data-admin="true"] .glass {
+            background: rgba(10, 0, 0, 0.7);
+            border: 1px solid rgba(239, 68, 68, 0.2);
         }
 
-        .game-card-shadow {
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        .game-card {
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.3s ease;
+            filter: saturate(1.4) contrast(1.1);
         }
-        .game-card-shadow:hover {
-            box-shadow: 0 0 40px -5px rgba(168, 85, 247, 0.4), 0 0 20px -5px rgba(34, 211, 238, 0.3);
-            transform: translateY(-12px) scale(1.03);
-            border-color: rgba(168, 85, 247, 0.4);
+        
+        .game-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px -10px var(--primary);
+            border-color: var(--primary);
+            z-index: 20;
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; opacity: 0.3; }
+        
+        .section-label {
+            font-size: 11px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.4em;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 28px;
+            animation: pulseGlow 2.5s ease-in-out infinite;
+        }
+
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), transparent);
+            box-shadow: 0 0 15px var(--glow);
+            opacity: 0.8;
+        }
+
+        .admin-bar {
+            background: linear-gradient(90deg, rgba(239, 68, 68, 0.1), transparent);
+            border-bottom: 1px solid rgba(239, 68, 68, 0.3);
+            font-family: 'JetBrains Mono', monospace;
         }
     </style>
     <script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@19.0.0",
-    "react-dom": "https://esm.sh/react-dom@19.0.0",
-    "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
-    "lucide-react": "https://esm.sh/lucide-react@0.460.0",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "@google/genai": "https://esm.sh/@google/genai@^1.35.0",
-    "jszip": "https://esm.sh/jszip@3.10.1"
-  }
-}
-</script>
-</head>
-<body class="dark">
-    <div class="animated-bg" id="bg-container">
-        <!-- Nebula Blobs -->
-        <div class="nebula animate-float" style="top: -10%; left: -10%;"></div>
-        <div class="nebula animate-float" style="bottom: -10%; right: -10%; animation-delay: -4s;"></div>
-        
-        <!-- Rotating Rings -->
-        <div class="portal-ring animate-spin-slow" style="width: 80vw; height: 80vw; opacity: 0.1;"></div>
-        <div class="portal-ring animate-reverse-spin" style="width: 60vw; height: 60vw; opacity: 0.05;"></div>
-        
-        <div id="star-field"></div>
-    </div>
-    <div id="root"></div>
-    <script>
-        const field = document.getElementById('star-field');
-        
-        // Static/Twinkling Stars
-        for (let i = 0; i < 120; i++) {
-            const star = document.createElement('div');
-            star.className = 'star';
-            const size = Math.random() * 2 + 0.5;
-            star.style.width = size + 'px';
-            star.style.height = size + 'px';
-            star.style.top = Math.random() * 100 + '%';
-            star.style.left = Math.random() * 100 + '%';
-            star.style.setProperty('--duration', (2 + Math.random() * 5) + 's');
-            field.appendChild(star);
-        }
-
-        // Flying/Floating Stars
-        for (let i = 0; i < 40; i++) {
-            const star = document.createElement('div');
-            star.className = 'flying-star';
-            const size = Math.random() * 1.5 + 0.5;
-            star.style.width = size + 'px';
-            star.style.height = size + 'px';
-            
-            star.style.top = Math.random() * 100 + '%';
-            star.style.left = Math.random() * 100 + '%';
-            
-            const angle = Math.random() * Math.PI * 2;
-            const distance = 200 + Math.random() * 300;
-            const x = Math.cos(angle) * distance;
-            const y = Math.sin(angle) * distance;
-            
-            star.style.setProperty('--fly-x', `${x}px`);
-            star.style.setProperty('--fly-y', `${y}px`);
-            star.style.setProperty('--fly-duration', (15 + Math.random() * 30) + 's');
-            
-            field.appendChild(star);
-        }
+    {
+      "imports": {
+        "react": "https://esm.sh/react@19.0.0",
+        "react-dom": "https://esm.sh/react-dom@19.0.0",
+        "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
+        "lucide-react": "https://esm.sh/lucide-react@0.460.0"
+      }
+    }
     </script>
-    <script type="module" src="/index.tsx"></script>
+</head>
+<body data-theme="obsidian">
+    <canvas id="bg-canvas"></canvas>
+    <div id="root"></div>
+
+    <script type="module">
+        import React, { useState, useEffect, useRef, useMemo } from 'react';
+        import ReactDOM from 'react-dom/client';
+        import { 
+            Search, Settings, X, Moon, ShieldAlert, 
+            Package, FileCode, Globe, Radio, 
+            Download, RefreshCw, Zap, Loader2, Sparkles, Ghost, EyeOff, Monitor, Cpu, Palette, Flame, TrendingUp, Star, LayoutGrid, Trophy, Terminal, Box, LogOut, Maximize2, DownloadCloud, Info, Activity, Command, ShieldCheck
+        } from 'lucide-react';
+
+        const ZONES_URL = "https://cdn.jsdelivr.net/gh/gn-math/assets@main/zones.json";
+        const COVER_BASE = "https://cdn.jsdelivr.net/gh/gn-math/covers@main";
+        const HTML_BASE = "https://cdn.jsdelivr.net/gh/gn-math/html@main";
+
+        const HOT_GAMES_LIST = [
+            "Buckshot Roulette", "R.E.P.O", "ULTRAKILL", "People Playground", "Pizza Tower",
+            "Steal A Brainrot", "Steal Brainrot Online", "Schoolboy Runaway", "That's Not My Neighbor",
+            "The Man In The Window", "Fears to Fathom: Home Alone", "Amanda the Adventurer",
+            "Backrooms", "Granny 3", "Melon Playground", "WebFishing", "Solar Smash",
+            "Blade Ball", "Fortzone Battle Royale", "Smash Karts", "Gorilla Tag", "Sprunki"
+        ];
+
+        const FEATURED_GAMES_LIST = [
+            "Minecraft 1.21.4", "Minecraft 1.12.2", "Minecraft 1.8.8", "Geometry Dash Lite",
+            "Friday Night Funkin", "Happy Wheels", "Slope", "Slope 2", "Retro Bowl",
+            "Retro Bowl College", "Run 3", "Stick War: Legacy", "Rooftop Snipers", "Rooftop Snipers 2",
+            "Papa's Freezeria", "Papa's Pizzeria", "Papa's Bakeria", "Plants vs Zombies",
+            "Super Smash Flash", "Super Mario 64", "Super Mario Bros", "Temple Run 2",
+            "Tomb Of The Mask", "OvO", "OvO 2", "OvO 3 Dimensions", "Cookie Clicker",
+            "Cut the Rope", "Moto X3M", "Moto X3M 2", "Moto X3M Spooky", "Moto X3M Winter", "Bloons TD 5"
+        ];
+
+        const App = () => {
+          const [zones, setZones] = useState([]);
+          const [searchQuery, setSearchQuery] = useState('');
+          const [activeUrl, setActiveUrl] = useState(null);
+          const [activeName, setActiveName] = useState('');
+          const [blobUrl, setBlobUrl] = useState(null);
+          const [isLoading, setIsLoading] = useState(false);
+          const [toasts, setToasts] = useState([]);
+          const [view, setView] = useState('main'); 
+          const [ms, setMs] = useState(0);
+          const iframeRef = useRef(null);
+          
+          const [settings, setSettings] = useState(() => {
+            const saved = localStorage.getItem('eclipse_settings_v14');
+            return saved ? JSON.parse(saved) : { stealth: false, performance: false, theme: 'obsidian' };
+          });
+
+          const [isAdmin, setIsAdmin] = useState(() => localStorage.getItem('eclipse_admin') === 'true');
+          const [showSettings, setShowSettings] = useState(false);
+          const [showAdminLogin, setShowAdminLogin] = useState(false);
+          const [showPorter, setShowPorter] = useState(false);
+          const [showVaultProxy, setShowVaultProxy] = useState(false);
+          const [adminCode, setAdminCode] = useState('');
+          const [customUrl, setCustomUrl] = useState('');
+
+          const addToast = (title, desc) => {
+            const id = Date.now();
+            setToasts(prev => [...prev, { id, title, desc }]);
+            setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), 4000);
+          };
+
+          const handleFullscreen = () => {
+            if (iframeRef.current) {
+              if (iframeRef.current.requestFullscreen) {
+                iframeRef.current.requestFullscreen();
+              } else if (iframeRef.current.webkitRequestFullscreen) {
+                iframeRef.current.webkitRequestFullscreen();
+              } else if (iframeRef.current.msRequestFullscreen) {
+                iframeRef.current.msRequestFullscreen();
+              }
+            }
+          };
+
+          const resolveUrl = (t) => t.replace("{COVER_URL}", COVER_BASE).replace("{HTML_URL}", HTML_BASE);
+
+          useEffect(() => {
+            fetch(`${ZONES_URL}?t=${Date.now()}`)
+              .then(res => res.json())
+              .then(data => setZones(data))
+              .catch(() => {});
+
+            const handleKeys = (e) => {
+              if (e.ctrlKey && e.shiftKey && e.altKey && e.code === 'KeyU') {
+                e.preventDefault();
+                setShowAdminLogin(true);
+              }
+            };
+            window.addEventListener('keydown', handleKeys);
+            
+            const timer = setInterval(() => setMs(Math.floor(Math.random() * 15) + 20), 2000);
+            
+            return () => {
+                window.removeEventListener('keydown', handleKeys);
+                clearInterval(timer);
+            };
+          }, []);
+
+          useEffect(() => {
+            localStorage.setItem('eclipse_settings_v14', JSON.stringify(settings));
+            document.body.setAttribute('data-theme', settings.theme);
+            document.body.setAttribute('data-admin', isAdmin);
+            
+            if (settings.stealth) {
+                document.getElementById('tab-title').innerText = "Google Classroom";
+                document.getElementById('tab-icon').href = "https://ssl.gstatic.com/classroom/favicon.png";
+            } else {
+                document.getElementById('tab-title').innerText = isAdmin ? "HELLFIRE CONSOLE" : "Eclipse | Standalone";
+                document.getElementById('tab-icon').href = isAdmin ? "https://cdn-icons-png.flaticon.com/512/234/234158.png" : "https://cdn.jsdelivr.net/gh/gn-math/gn-math.github.io@main/favicon.png";
+            }
+          }, [settings, isAdmin]);
+
+          useEffect(() => {
+            const canvas = document.getElementById('bg-canvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
+            window.addEventListener('resize', resize);
+            resize();
+
+            const createParticles = () => {
+                particles = [];
+                const count = isAdmin ? 40 : (settings.performance ? 8 : 25);
+                for(let i=0; i < count; i++) {
+                    particles.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        s: Math.random() * 1.5 + 1,
+                        vx: (Math.random()-0.5) * (isAdmin ? 0.3 : 0.1),
+                        vy: (Math.random()-0.5) * (isAdmin ? 0.3 : 0.1),
+                        a: Math.random() * 0.15 + 0.05
+                    });
+                }
+            };
+            createParticles();
+
+            const draw = () => {
+                ctx.clearRect(0,0, canvas.width, canvas.height);
+                ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--primary');
+                particles.forEach(p => {
+                    p.x += p.vx; p.y += p.vy;
+                    if(p.x < 0) p.x = canvas.width; if(p.x > canvas.width) p.x = 0;
+                    if(p.y < 0) p.y = canvas.height; if(p.y > canvas.height) p.y = 0;
+                    ctx.globalAlpha = p.a;
+                    ctx.beginPath(); ctx.arc(p.x, p.y, p.s, 0, Math.PI*2); ctx.fill();
+                });
+                requestAnimationFrame(draw);
+            };
+            draw();
+          }, [settings.performance, settings.theme, isAdmin]);
+
+          const processedLibrary = useMemo(() => {
+            return zones.map(z => {
+                const name = z.name.trim();
+                const lowerName = name.toLowerCase();
+                const isHot = HOT_GAMES_LIST.some(h => lowerName === h.toLowerCase());
+                let isFeatured = false;
+                if (lowerName === "friday night funkin") {
+                    isFeatured = true;
+                } else if (!lowerName.includes("friday night funkin")) {
+                    isFeatured = FEATURED_GAMES_LIST.some(f => lowerName === f.toLowerCase());
+                }
+                return { ...z, isHot, isFeatured };
+            }).sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' }));
+          }, [zones]);
+
+          const featuredGamesList = useMemo(() => processedLibrary.filter(z => z.isFeatured), [processedLibrary]);
+          
+          const filteredLibrary = useMemo(() => {
+            if (!searchQuery) return processedLibrary;
+            return processedLibrary.filter(z => z.name.toLowerCase().includes(searchQuery.toLowerCase()));
+          }, [processedLibrary, searchQuery]);
+
+          const loadContent = async (url, name) => {
+            setIsLoading(true);
+            setActiveUrl(url);
+            setActiveName(name);
+            try {
+                const response = await fetch(url);
+                const text = await response.text();
+                const blob = new Blob([text], { type: 'text/html' });
+                if(blobUrl) URL.revokeObjectURL(blobUrl);
+                setBlobUrl(URL.createObjectURL(blob));
+            } catch { 
+              setActiveUrl(null); 
+              addToast("Access Error", "Source connection unstable."); 
+            } finally { 
+              setIsLoading(false); 
+            }
+          };
+
+          return React.createElement('div', { className: "min-h-screen flex flex-col selection:bg-primary/40" }, [
+            
+            // Hellfire Admin Bar
+            isAdmin && React.createElement('div', { className: "admin-bar sticky top-0 z-[70] px-4 py-1.5 flex items-center justify-between text-[10px] uppercase font-bold text-red-500 overflow-hidden" }, [
+                React.createElement('div', { className: "flex items-center gap-6" }, [
+                    React.createElement('div', { className: "flex items-center gap-2" }, [
+                        React.createElement(ShieldCheck, { size: 12 }),
+                        React.createElement('span', {}, "Hellfire Protocol: Active")
+                    ]),
+                    React.createElement('div', { className: "hidden sm:flex items-center gap-4 opacity-70" }, [
+                        React.createElement('div', { className: "flex items-center gap-1.5" }, [
+                            React.createElement(Activity, { size: 12 }),
+                            React.createElement('span', {}, `Latency: ${ms}ms`)
+                        ]),
+                        React.createElement('div', { className: "flex items-center gap-1.5" }, [
+                            React.createElement(Cpu, { size: 12 }),
+                            React.createElement('span', {}, "Load: 0.04%")
+                        ])
+                    ])
+                ]),
+                React.createElement('div', { className: "flex items-center gap-4" }, [
+                    React.createElement('button', { onClick: () => setShowPorter(true), className: "hover:text-white transition-colors flex items-center gap-1.5" }, [
+                        React.createElement(Package, { size: 12 }), "Porter"
+                    ]),
+                    React.createElement('button', { onClick: () => setShowVaultProxy(true), className: "hover:text-white transition-colors flex items-center gap-1.5" }, [
+                        React.createElement(Globe, { size: 12 }), "Proxy"
+                    ]),
+                    React.createElement('div', { className: "w-px h-3 bg-red-500/30" }),
+                    React.createElement('button', { onClick: () => { setIsAdmin(false); localStorage.setItem('eclipse_admin', 'false'); }, className: "hover:text-white" }, "Exit_Console")
+                ])
+            ]),
+
+            // Header
+            React.createElement('header', { key: 'head', className: `glass sticky z-[60] px-6 py-4 border-b border-white/10 ${isAdmin ? 'top-[28px]' : 'top-0'}` }, 
+              React.createElement('div', { className: "max-w-7xl mx-auto flex items-center justify-between gap-6" }, [
+                React.createElement('div', { className: "flex items-center gap-3 cursor-pointer group active:scale-95 transition-transform", onClick: () => window.location.reload() }, [
+                    React.createElement('div', { className: "p-2 bg-primary rounded-xl rotate-3 group-hover:rotate-0 transition-all shadow-lg shadow-primary/20" }, React.createElement(Moon, { size: 18, className: "text-white" })),
+                    React.createElement('h1', { className: "text-xl font-black italic text-white tracking-tighter" }, isAdmin ? "HELLFIRE" : "ECLIPSE")
+                ]),
+                React.createElement('div', { className: "flex-1 max-w-sm relative" }, [
+                    React.createElement(Search, { size: 14, className: "absolute left-4 top-1/2 -translate-y-1/2 text-white/40" }),
+                    React.createElement('input', { 
+                        type: 'text', placeholder: isAdmin ? "Querying database..." : "Search the archive...", 
+                        className: "w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-xs outline-none focus:border-primary focus:bg-white/10 transition-all",
+                        value: searchQuery, onChange: e => setSearchQuery(e.target.value)
+                    })
+                ]),
+                React.createElement('div', { className: "flex gap-3 items-center" }, [
+                    React.createElement('button', { onClick: () => { setShowSettings(true); setView('main'); }, className: "p-2.5 hover:bg-white/10 rounded-xl transition-all border border-transparent hover:border-white/10" }, React.createElement(Settings, { size: 20 }))
+                ])
+              ])
+            ),
+
+            // Toasts
+            React.createElement('div', { className: "fixed bottom-6 right-6 z-[2000] flex flex-col gap-3 pointer-events-none" }, 
+                toasts.map(t => React.createElement('div', { key: t.id, className: "glass p-4 rounded-2xl border-primary/20 flex items-center gap-3 animate-toast shadow-2xl" }, [
+                    React.createElement(Trophy, { size: 18, className: "text-primary" }),
+                    React.createElement('div', {}, [
+                        React.createElement('p', { className: "text-[10px] font-black uppercase tracking-widest leading-none text-white" }, t.title),
+                        React.createElement('p', { className: "text-[9px] text-white/40 mt-1" }, t.desc)
+                    ])
+                ]))
+            ),
+
+            // Main Content
+            React.createElement('main', { key: 'main', className: "flex-1 max-w-7xl mx-auto w-full p-6" }, [
+                !searchQuery && featuredGamesList.length > 0 && React.createElement('section', { className: "mb-16" }, [
+                    React.createElement('div', { className: "section-label" }, "⭐ Featured (Popular)"),
+                    React.createElement('div', { className: "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6" }, 
+                        featuredGamesList.map((zone, i) => (
+                            React.createElement('div', {
+                                key: `feat-${zone.id}`,
+                                onClick: () => loadContent(resolveUrl(zone.url), zone.name),
+                                style: { animationDelay: `${i * 30}ms` },
+                                className: "game-card relative group rounded-3xl overflow-hidden glass border-2 border-primary/30 cursor-pointer animate-slide-up shadow-lg shadow-primary/10"
+                            }, [
+                                React.createElement('div', { className: "aspect-square overflow-hidden bg-slate-900" }, 
+                                    React.createElement('img', { 
+                                        src: resolveUrl(zone.cover), 
+                                        className: "w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700",
+                                        loading: "lazy"
+                                    })
+                                ),
+                                React.createElement('div', { className: "p-4" }, [
+                                    React.createElement('h3', { className: "text-[10px] font-black uppercase tracking-tight text-white group-hover:text-primary transition-colors truncate" }, zone.name),
+                                    React.createElement('div', { className: "flex items-center gap-1.5 mt-1" }, [
+                                        React.createElement(Star, { size: 10, className: "text-yellow-500 fill-yellow-500" }),
+                                        zone.isHot && React.createElement(Flame, { size: 10, className: "text-red-500" })
+                                    ])
+                                ])
+                            ])
+                        ))
+                    )
+                ]),
+
+                React.createElement('section', {}, [
+                    React.createElement('div', { className: "section-label" }, searchQuery ? "Search Results" : "🔥 All Library (A-Z)"),
+                    React.createElement('div', { className: "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6" }, 
+                        filteredLibrary.map((zone, i) => (
+                            React.createElement('div', {
+                                key: zone.id,
+                                onClick: () => loadContent(resolveUrl(zone.url), zone.name),
+                                style: { animationDelay: `${i * 10}ms` },
+                                className: "game-card relative group rounded-3xl overflow-hidden glass border border-white/10 cursor-pointer animate-slide-up"
+                            }, [
+                                React.createElement('div', { className: "aspect-square overflow-hidden bg-slate-900" }, 
+                                    React.createElement('img', { 
+                                        src: resolveUrl(zone.cover), 
+                                        className: "w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500",
+                                        loading: "lazy"
+                                    })
+                                ),
+                                React.createElement('div', { className: "p-4" }, [
+                                    React.createElement('h3', { className: "text-[10px] font-black uppercase tracking-tight text-white/70 group-hover:text-white transition-colors truncate" }, zone.name),
+                                    React.createElement('div', { className: "flex items-center gap-1.5 mt-1" }, [
+                                        zone.isHot && React.createElement(Flame, { size: 10, className: "text-red-500" }),
+                                        zone.isFeatured && React.createElement(Star, { size: 10, className: "text-yellow-500/40" })
+                                    ])
+                                ])
+                            ])
+                        ))
+                    )
+                ])
+            ]),
+
+            showSettings && React.createElement('div', { className: "fixed inset-0 z-[1000] flex items-center justify-center bg-black/80 backdrop-blur-md p-6" }, 
+                React.createElement('div', { className: "glass rounded-[2.5rem] p-10 max-w-xl w-full shadow-2xl max-h-[85vh] flex flex-col border border-white/10" }, [
+                    React.createElement('div', { className: "flex justify-between items-center mb-8 shrink-0" }, [
+                        React.createElement('div', { className: "flex gap-6" }, [
+                            React.createElement('button', { 
+                                onClick: () => setView('main'),
+                                className: `text-[11px] font-black uppercase tracking-[0.3em] pb-2 border-b-2 transition-all ${view === 'main' ? 'text-primary border-primary' : 'text-white/40 border-transparent hover:text-white'}`
+                            }, "System"),
+                            React.createElement('button', { 
+                                onClick: () => setView('about'),
+                                className: `text-[11px] font-black uppercase tracking-[0.3em] pb-2 border-b-2 transition-all ${view === 'about' ? 'text-primary border-primary' : 'text-white/40 border-transparent hover:text-white'}`
+                            }, "About")
+                        ]),
+                        React.createElement('button', { onClick: () => setShowSettings(false) }, React.createElement(X, { size: 24 }))
+                    ]),
+                    
+                    React.createElement('div', { className: "flex-1 overflow-y-auto no-scrollbar pr-2" }, 
+                        view === 'main' ? React.createElement('div', { className: "space-y-10 animate-fade-in" }, [
+                            React.createElement('div', {}, [
+                                React.createElement('h4', { className: "text-[9px] font-black uppercase text-white/40 tracking-widest mb-4" }, "UI Interface"),
+                                React.createElement('div', { className: "grid grid-cols-4 gap-4" }, ['obsidian', 'amoled', 'cyber', 'retro'].map(t => (
+                                    React.createElement('button', { 
+                                        key: t, onClick: () => setSettings({...settings, theme: t}),
+                                        className: `aspect-square rounded-2xl border-2 transition-all flex items-center justify-center p-1.5 ${settings.theme === t ? 'border-primary shadow-lg shadow-primary/30 scale-105' : 'border-transparent bg-white/5'}`
+                                    }, React.createElement('div', { className: `w-full h-full rounded-xl ${t === 'obsidian' ? 'bg-purple-600' : t === 'amoled' ? 'bg-white' : t === 'cyber' ? 'bg-cyan-400' : 'bg-orange-500'}` }))
+                                )))
+                            ]),
+                            React.createElement('div', { className: "space-y-6" }, [
+                                React.createElement('div', { className: "flex items-center justify-between" }, [
+                                    React.createElement('div', {}, [
+                                        React.createElement('p', { className: "text-[10px] font-black uppercase tracking-widest" }, "Stealth Mask"),
+                                        React.createElement('p', { className: "text-[8px] text-white/30" }, "Modify browser environment identifiers")
+                                    ]),
+                                    React.createElement('button', { 
+                                        onClick: () => setSettings({...settings, stealth: !settings.stealth}),
+                                        className: `w-12 h-6 rounded-full px-1 transition-all ${settings.stealth ? 'bg-primary' : 'bg-white/10'}`
+                                    }, React.createElement('div', { className: `w-4 h-4 bg-white rounded-full transition-all ${settings.stealth ? 'translate-x-6' : ''}` }))
+                                ]),
+                                React.createElement('div', { className: "flex items-center justify-between" }, [
+                                    React.createElement('div', {}, [
+                                        React.createElement('p', { className: "text-[10px] font-black uppercase tracking-widest" }, "Performance Boost"),
+                                        React.createElement('p', { className: "text-[8px] text-white/30" }, "Disable high-density visual FX")
+                                    ]),
+                                    React.createElement('button', { 
+                                        onClick: () => setSettings({...settings, performance: !settings.performance}),
+                                        className: `w-12 h-6 rounded-full px-1 transition-all ${settings.performance ? 'bg-primary' : 'bg-white/10'}`
+                                    }, React.createElement('div', { className: `w-4 h-4 bg-white rounded-full transition-all ${settings.performance ? 'translate-x-6' : ''}` }))
+                                ])
+                            ])
+                        ]) : React.createElement('div', { className: "space-y-12 pb-6 animate-fade-in" }, [
+                            React.createElement('div', { className: "space-y-6" }, [
+                                React.createElement('div', { className: "glass p-6 rounded-3xl border-primary/20 bg-primary/5 shadow-inner" }, [
+                                    React.createElement('h4', { className: "text-[10px] font-black uppercase tracking-widest text-primary mb-6" }, "Architectural Credits"),
+                                    React.createElement('div', { className: "grid grid-cols-1 gap-4" }, [
+                                        React.createElement('div', { className: "flex items-center gap-4" }, [
+                                            React.createElement('div', { className: "p-3 bg-secondary/10 text-secondary rounded-2xl" }, React.createElement(Terminal, { size: 20 })),
+                                            React.createElement('div', {}, [
+                                                React.createElement('p', { className: "text-[11px] font-black text-white" }, "GN-MATH"),
+                                                React.createElement('p', { className: "text-[8px] text-white/40 leading-relaxed" }, "Primary asset curator and game porter. Ported every single title in the library.")
+                                            ])
+                                        ]),
+                                        React.createElement('div', { className: "flex items-center gap-4" }, [
+                                            React.createElement('div', { className: "p-3 bg-primary/10 text-primary rounded-2xl" }, React.createElement(Sparkles, { size: 20 })),
+                                            React.createElement('div', {}, [
+                                                React.createElement('p', { className: "text-[11px] font-black text-white" }, "GEMINI AI"),
+                                                React.createElement('p', { className: "text-[8px] text-white/40 leading-relaxed" }, "System logic, frontend architecture, and interface implementation.")
+                                            ])
+                                        ])
+                                    ])
+                                ])
+                            ]),
+                            React.createElement('div', { className: "space-y-4" }, [
+                                React.createElement('h4', { className: "text-[10px] font-black uppercase tracking-widest text-primary" }, "Full Catalog Index"),
+                                React.createElement('div', { className: "grid grid-cols-2 gap-x-6 gap-y-2" }, 
+                                    processedLibrary.map(z => React.createElement('div', { key: `idx-${z.id}`, className: "text-[9px] py-1.5 px-4 bg-white/5 rounded-xl text-white/50 truncate flex items-center justify-between" }, [
+                                        z.name,
+                                        z.isHot && React.createElement(Flame, { size: 8, className: "text-red-500 shrink-0 ml-2" })
+                                    ]))
+                                )
+                            ])
+                        ])
+                    )
+                ])
+            ),
+
+            showAdminLogin && React.createElement('div', { className: "fixed inset-0 z-[1100] flex items-center justify-center bg-black/95 p-6" }, 
+                React.createElement('form', { 
+                    onSubmit: (e) => { 
+                        e.preventDefault(); 
+                        if(adminCode === '4739') { setIsAdmin(true); localStorage.setItem('eclipse_admin', 'true'); setShowAdminLogin(false); addToast("Auth Established", "Hellfire privileges granted."); }
+                        else addToast("Auth Error", "Invalid decryption sequence.");
+                    },
+                    className: "glass p-12 rounded-[2.5rem] max-w-sm w-full space-y-6 border-red-500/20"
+                }, [
+                    React.createElement('p', { className: "text-center text-[10px] font-black uppercase text-red-500 tracking-widest" }, "Hellfire Access Node"),
+                    React.createElement('input', { 
+                        type: 'password', autoFocus: true, value: adminCode, onChange: e => setAdminCode(e.target.value),
+                        className: "w-full bg-black border border-white/5 rounded-2xl p-4 text-center text-4xl font-mono text-white outline-none focus:border-red-500"
+                    }),
+                    React.createElement('div', { className: "flex gap-2" }, [
+                        React.createElement('button', { type: 'submit', className: "flex-1 py-4 bg-red-600 text-white font-black uppercase text-[10px] rounded-2xl hover:bg-red-500 transition-all" }, "Initialize"),
+                        React.createElement('button', { type: 'button', onClick: () => setShowAdminLogin(false), className: "p-4 border border-white/5 rounded-2xl text-white/40" }, React.createElement(X, { size: 20 }))
+                    ])
+                ])
+            ),
+
+            showPorter && React.createElement('div', { className: "fixed inset-0 z-[1500] flex items-center justify-center bg-black/80 backdrop-blur-xl p-6" }, 
+                React.createElement('div', { className: "glass rounded-[2.5rem] p-10 max-w-md w-full border-red-500/20 shadow-2xl" }, [
+                    React.createElement('div', { className: "flex justify-between items-center mb-8" }, [
+                        React.createElement('h3', { className: "text-xs font-black uppercase text-red-500" }, "Asset Porter"),
+                        React.createElement('button', { onClick: () => setShowPorter(false) }, React.createElement(X, { size: 24 }))
+                    ]),
+                    React.createElement('label', { className: "block border-2 border-dashed border-red-500/20 rounded-3xl p-12 text-center cursor-pointer hover:bg-red-500/5 transition-all group" }, [
+                        React.createElement(FileCode, { size: 32, className: "mx-auto text-red-500 mb-4" }),
+                        React.createElement('p', { className: "text-[10px] font-black uppercase" }, "Inject Local Node"),
+                        React.createElement('input', { 
+                            type: 'file', className: "hidden", accept: ".html",
+                            onChange: (e) => {
+                                const file = e.target.files[0];
+                                if(!file) return;
+                                const reader = new FileReader();
+                                reader.onload = (ev) => {
+                                    const blob = new Blob([ev.target.result], { type: 'text/html' });
+                                    setBlobUrl(URL.createObjectURL(blob));
+                                    setActiveUrl('local-stream');
+                                    setActiveName(file.name);
+                                    setShowPorter(false);
+                                };
+                                reader.readAsText(file);
+                            }
+                        })
+                    ])
+                ])
+            ),
+
+            showVaultProxy && React.createElement('div', { className: "fixed inset-0 z-[1500] flex items-center justify-center bg-black/80 backdrop-blur-xl p-6" }, 
+                React.createElement('div', { className: "glass rounded-[2.5rem] p-10 max-w-md w-full border-red-500/20 shadow-2xl" }, [
+                    React.createElement('div', { className: "flex justify-between items-center mb-8" }, [
+                        React.createElement('h3', { className: "text-xs font-black uppercase text-red-500" }, "Vault Proxy"),
+                        React.createElement('button', { onClick: () => setShowVaultProxy(false) }, React.createElement(X, { size: 24 }))
+                    ]),
+                    React.createElement('div', { className: "space-y-4" }, [
+                        React.createElement('input', { 
+                            type: 'text', placeholder: "Target Node Link...",
+                            className: "w-full p-4 bg-black border border-white/10 rounded-2xl text-xs outline-none focus:border-red-500" ,
+                            value: customUrl, onChange: e => setCustomUrl(e.target.value)
+                        }),
+                        React.createElement('button', { 
+                            onClick: () => {
+                                if(!customUrl) return;
+                                loadContent(customUrl, "Proxy Uplink");
+                                setShowVaultProxy(false);
+                            },
+                            className: "w-full py-4 bg-red-600 text-white font-black uppercase text-[10px] rounded-2xl hover:bg-red-500" 
+                        }, "Initialize")
+                    ])
+                ])
+            ),
+
+            activeUrl && React.createElement('div', { className: "fixed inset-0 z-[1200] bg-black flex flex-col animate-fade-in" }, [
+                React.createElement('div', { className: "glass p-3 border-b border-white/10 flex justify-between items-center" }, [
+                    React.createElement('div', { className: "flex items-center gap-3" }, [
+                        React.createElement(Radio, { size: 14, className: "text-secondary animate-pulse" }),
+                        React.createElement('span', { className: "text-[10px] font-black uppercase tracking-widest text-secondary" }, activeName)
+                    ]),
+                    React.createElement('div', { className: "flex gap-2" }, [
+                        React.createElement('button', { 
+                            onClick: async () => {
+                                try {
+                                    const res = await fetch(activeUrl);
+                                    const text = await res.text();
+                                    const blob = new Blob([text], { type: 'text/html' });
+                                    const link = document.createElement('a');
+                                    link.href = URL.createObjectURL(blob);
+                                    link.download = `${activeName.replace(/\s+/g, '_').toLowerCase()}.html`;
+                                    link.click();
+                                    addToast("Archive Stored", "Artifact saved locally.");
+                                } catch { addToast("Capture Error", "Download failed."); }
+                            }, 
+                            className: "px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-[9px] font-black uppercase transition-all" 
+                        }, "Archive"),
+                        React.createElement('button', { 
+                            onClick: handleFullscreen, 
+                            className: "px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-[9px] font-black uppercase transition-all" 
+                        }, "Fullscreen"),
+                        React.createElement('button', { onClick: () => { setActiveUrl(null); setBlobUrl(null); }, className: "p-2 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500 transition-all" }, React.createElement(X, { size: 16 }))
+                    ])
+                ]),
+                React.createElement('div', { className: "flex-1 relative bg-white" }, [
+                    isLoading && React.createElement('div', { className: "absolute inset-0 bg-slate-950 flex items-center justify-center z-10" }, React.createElement(Loader2, { className: "animate-spin text-primary", size: 32 })),
+                    blobUrl && React.createElement('iframe', { 
+                        ref: iframeRef,
+                        src: blobUrl, 
+                        key: blobUrl, 
+                        className: "w-full h-full border-none shadow-2xl",
+                        allow: "fullscreen; autoplay; encrypted-media; picture-in-picture"
+                    })
+                ])
+            ])
+          ]);
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(React.createElement(App));
+    </script>
 </body>
 </html>

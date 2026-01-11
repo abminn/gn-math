@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link id="tab-icon" rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/gn-math/gn-math.github.io@main/favicon.png">
     <script id="preload-data">
-        /* This script tag is used for standalone injections */
+        /* Standalone detection */
         window._IS_EXPORTED_ = !!window._ECLIPSE_PRELOADED_DATA_;
     </script>
     <script>
@@ -27,14 +27,12 @@
                         'slide-up': 'slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
                         'toast': 'toastIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
                         'fade-in': 'fadeIn 0.3s ease-out forwards',
-                        'pulse-glow': 'pulseGlow 2.5s ease-in-out infinite'
                     },
                     keyframes: {
                         ripple: { '0%': { transform: 'scale(0)', opacity: '0.3' }, '100%': { transform: 'scale(4)', opacity: '0' } },
                         slideUp: { '0%': { opacity: '0', transform: 'translateY(30px) scale(0.98)' }, '100%': { opacity: '1', transform: 'translateY(0) scale(1)' } },
                         toastIn: { '0%': { transform: 'translateY(100%) scale(0.9)', opacity: '0' }, '100%': { transform: 'translateY(0) scale(1)', opacity: '1' } },
                         fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
-                        pulseGlow: { '0%, 100%': { textShadow: '0 0 10px var(--glow), 0 0 20px var(--glow)' }, '50%': { textShadow: '0 0 15px var(--glow), 0 0 30px var(--glow)' } }
                     }
                 }
             }
@@ -52,19 +50,12 @@
             --header-bg: rgba(15, 23, 42, 0.85);
         }
 
-        /* Default Normal Mode */
-        body[data-admin="false"] {
-            --primary: #a855f7;
-            --glow: #a855f7;
-        }
-
-        /* Theme Overrides (Only in Normal Mode) */
+        body[data-admin="false"] { --primary: #a855f7; --glow: #a855f7; }
         body[data-admin="false"][data-theme='obsidian'] { --bg-color: #020617; --header-bg: rgba(15, 23, 42, 0.85); }
         body[data-admin="false"][data-theme='amoled'] { --bg-color: #000000; --header-bg: rgba(0, 0, 0, 0.9); --primary: #ffffff; --glow: #ffffff; }
         body[data-admin="false"][data-theme='cyber'] { --primary: #06b6d4; --glow: #06b6d4; --bg-color: #010409; --header-bg: rgba(1, 4, 9, 0.9); }
         body[data-admin="false"][data-theme='retro'] { --primary: #f59e0b; --glow: #f59e0b; --bg-color: #1a1a1a; --header-bg: rgba(26, 26, 26, 0.9); }
 
-        /* Hellfire / Admin State - SOLID Backgrounds */
         body[data-admin="true"] {
             --primary: #ef4444;
             --glow: #ef4444;
@@ -79,37 +70,18 @@
             color: #f1f5f9;
             transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             overflow-x: hidden;
-            cursor: default !important;
         }
 
         #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
-        
-        .glass { 
-            background-color: var(--header-bg); 
-            backdrop-filter: blur(25px); 
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        body[data-admin="true"] .glass { 
-            border-bottom: 1px solid rgba(239, 68, 68, 0.3);
-        }
-
-        .admin-bar { 
-            background-color: var(--header-bg); 
-            border-bottom: 1px solid rgba(239, 68, 68, 0.3); 
-            font-family: 'JetBrains Mono', monospace; 
-        }
+        .glass { background-color: var(--header-bg); backdrop-filter: blur(25px); border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        body[data-admin="true"] .glass { border-bottom: 1px solid rgba(239, 68, 68, 0.3); }
+        .admin-bar { background-color: var(--header-bg); border-bottom: 1px solid rgba(239, 68, 68, 0.3); font-family: 'JetBrains Mono', monospace; }
 
         .game-card { 
             transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.3s ease; 
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
-        .game-card:hover { 
-            transform: translateY(-8px) scale(1.02); 
-            box-shadow: 0 20px 40px -10px var(--primary); 
-            border-color: var(--primary); 
-            z-index: 20; 
-        }
+        .game-card:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 20px 40px -10px var(--primary); border-color: var(--primary); z-index: 20; }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
         ::-webkit-scrollbar { width: 6px; }
@@ -119,22 +91,9 @@
         .section-label { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.4em; color: var(--primary); display: flex; align-items: center; gap: 20px; margin-bottom: 28px; }
         .section-label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--primary), transparent); opacity: 0.5; }
 
-        .about-card {
-            background: rgba(255, 255, 255, 0.03);
-            border-left: 4px solid var(--primary);
-            padding: 1.5rem;
-            border-radius: 0 1rem 1rem 0;
-            margin-bottom: 1.5rem;
-        }
-
-        .catalog-item {
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.2s ease;
-        }
-        .catalog-item:hover {
-            border-color: var(--primary);
-            background: rgba(255, 255, 255, 0.05);
-        }
+        .about-card { background: rgba(255, 255, 255, 0.03); border-left: 4px solid var(--primary); padding: 1.5rem; border-radius: 0 1rem 1rem 0; margin-bottom: 1.5rem; }
+        .catalog-item { border: 1px solid rgba(255, 255, 255, 0.05); transition: all 0.2s ease; }
+        .catalog-item:hover { border-color: var(--primary); background: rgba(255, 255, 255, 0.05); }
     </style>
     <script type="importmap">
     {
@@ -154,7 +113,7 @@
     <script type="module">
         import React, { useState, useEffect, useRef, useMemo } from 'react';
         import ReactDOM from 'react-dom/client';
-        import { Search, Settings, X, Moon, Package, FileCode, Globe, Radio, Loader2, Sparkles, Flame, Star, Trophy, Terminal, DownloadCloud, Activity, Cpu, ShieldCheck, Share2, Info, List } from 'lucide-react';
+        import { Search, Settings, X, Moon, Package, FileCode, Globe, Radio, Loader2, Sparkles, Flame, Star, Trophy, Terminal, DownloadCloud, Activity, Cpu, ShieldCheck, Share2, Info, List, AlertTriangle, RefreshCw } from 'lucide-react';
 
         const PRELOADED_ZONES = window._ECLIPSE_PRELOADED_DATA_;
         const ZONES_URL = "https://cdn.jsdelivr.net/gh/gn-math/assets@main/zones.json";
@@ -170,7 +129,7 @@
           const [aboutSearch, setAboutSearch] = useState('');
           const [activeUrl, setActiveUrl] = useState(null);
           const [activeName, setActiveName] = useState('');
-          const [blobUrl, setBlobUrl] = useState(null);
+          const [iframeSrc, setIframeSrc] = useState(null);
           const [isLoading, setIsLoading] = useState(false);
           const [toasts, setToasts] = useState([]);
           const [view, setView] = useState('main'); 
@@ -215,6 +174,71 @@
               return t.replace("{COVER_URL}", COVER_BASE).replace("{HTML_URL}", HTML_BASE);
           };
 
+          /**
+           * THE CORE FIX:
+           * Use Direct URL Navigation by default to preserve Headers/Origin/WASM.
+           * Use MIME-Force (Blob) only if explicitly requested.
+           */
+          const loadContent = async (url, name, useMimeForce = false) => {
+            const finalUrl = resolveUrl(url); 
+            setActiveUrl(finalUrl); 
+            setActiveName(name);
+            setIsLoading(true);
+            
+            // CLEANUP PREVIOUS BLOB
+            if (iframeSrc && iframeSrc.startsWith('blob:')) {
+                URL.revokeObjectURL(iframeSrc);
+            }
+
+            // Path 1: Standalone / Direct (Best for WASM/Assets)
+            if (!useMimeForce || window.location.protocol === 'file:') {
+                setIframeSrc(finalUrl);
+                setIsLoading(false);
+                return;
+            }
+
+            // Path 2: MIME-Force (For text/plain serving fallback)
+            try {
+                const response = await fetch(finalUrl);
+                if (!response.ok) throw new Error("Fetch failed");
+                
+                let code = await response.text();
+                const baseUrl = finalUrl.substring(0, finalUrl.lastIndexOf('/') + 1);
+                const baseTag = `<base href="${baseUrl}">`;
+                
+                // Inject BASE at the very top of head or html
+                if (code.includes('<head>')) {
+                    code = code.replace('<head>', `<head>${baseTag}`);
+                } else if (code.includes('<html>')) {
+                    code = code.replace('<html>', `<html><head>${baseTag}</head>`);
+                } else {
+                    code = `${baseTag}${code}`;
+                }
+
+                const blob = new Blob([code], { type: "text/html" });
+                setIframeSrc(URL.createObjectURL(blob));
+            } catch (err) {
+                console.warn("MIME-Force failed, reverting to Direct.", err);
+                setIframeSrc(finalUrl);
+            } finally {
+                setIsLoading(false);
+            }
+          };
+
+          const handleArchiveIframe = async () => {
+            if (!activeUrl) return;
+            try {
+                const res = await fetch(activeUrl);
+                const text = await res.text();
+                const blob = new Blob([text], { type: 'text/html' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `${activeName.replace(/\s+/g, '_').toLowerCase()}.html`;
+                link.click();
+                addToast("Captured", "Snapshot downloaded.");
+            } catch { addToast("Error", "Security prevents fetching code directly."); }
+          };
+
           const handleExportApp = () => {
             let docCopy = document.documentElement.cloneNode(true);
             const body = docCopy.querySelector('body');
@@ -227,7 +251,7 @@
             const oldPreload = docCopy.querySelector('#preload-data');
             if (oldPreload) oldPreload.innerHTML = "window._IS_EXPORTED_ = true;";
 
-            const exportZones = zones.map(z => ({
+            const exportZones = (zones || []).map(z => ({
                 ...z,
                 cover: resolveUrl(z.cover),
                 url: resolveUrl(z.url)
@@ -244,7 +268,7 @@
             link.download = `eclipse_standalone.html`;
             link.click();
             URL.revokeObjectURL(url);
-            addToast("Export Successful", "Standalone build saved.");
+            addToast("Export Successful", "Build saved to disk.");
           };
 
           useEffect(() => {
@@ -252,14 +276,10 @@
                 fetch(`${ZONES_URL}?t=${Date.now()}`)
                   .then(res => res.json())
                   .then(data => setZones(data))
-                  .catch(() => addToast("Index Error", "Failed to reach GN-MATH asset hub."));
+                  .catch(() => addToast("Index Error", "GN-MATH servers unreachable."));
             }
-
             const handleKeys = (e) => {
-              if (e.ctrlKey && e.shiftKey && e.altKey && e.code === 'KeyU') {
-                e.preventDefault();
-                setShowAdminLogin(true);
-              }
+              if (e.ctrlKey && e.shiftKey && e.altKey && e.code === 'KeyU') { e.preventDefault(); setShowAdminLogin(true); }
             };
             window.addEventListener('keydown', handleKeys);
             const timer = setInterval(() => setMs(Math.floor(Math.random() * 15) + 20), 2000);
@@ -270,10 +290,8 @@
             localStorage.setItem('eclipse_settings_v14', JSON.stringify(settings));
             document.body.setAttribute('data-theme', settings.theme);
             document.body.setAttribute('data-admin', isAdmin);
-            
             const title = document.getElementById('tab-title');
             const icon = document.getElementById('tab-icon');
-            
             if (settings.stealth) {
                 title.innerText = "Google Classroom";
                 icon.href = "https://ssl.gstatic.com/classroom/favicon.png";
@@ -340,40 +358,6 @@
               if (!aboutSearch) return processedLibrary;
               return processedLibrary.filter(z => z.name.toLowerCase().includes(aboutSearch.toLowerCase()));
           }, [processedLibrary, aboutSearch]);
-
-          const loadContent = async (url, name) => {
-            setIsLoading(true); 
-            const finalUrl = resolveUrl(url); 
-            setActiveUrl(finalUrl); 
-            setActiveName(name);
-            try {
-                const response = await fetch(finalUrl);
-                if (!response.ok) throw new Error("Network error");
-                const text = await response.text();
-                const blob = new Blob([text], { type: 'text/html' });
-                const bUrl = URL.createObjectURL(blob);
-                if(blobUrl) URL.revokeObjectURL(blobUrl);
-                setBlobUrl(bUrl);
-            } catch (err) { 
-                console.error("Load failed:", err);
-                setActiveUrl(null); 
-                addToast("Fetch Failed", "Asset node unreachable."); 
-            } finally { setIsLoading(false); }
-          };
-
-          const handleArchiveIframe = async () => {
-            if (!activeUrl) return;
-            try {
-                const res = await fetch(activeUrl);
-                const text = await res.text();
-                const blob = new Blob([text], { type: 'text/html' });
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = `${activeName.replace(/\s+/g, '_').toLowerCase()}.html`;
-                link.click();
-                addToast("Captured", "Local snapshot downloaded.");
-            } catch { addToast("Error", "Source capture blocked."); }
-          };
 
           return React.createElement('div', { className: "min-h-screen flex flex-col selection:bg-primary/40" }, [
             
@@ -515,9 +499,7 @@
                                     React.createElement('div', { className: "relative" }, [
                                         React.createElement(Search, { size: 10, className: "absolute left-2 top-1/2 -translate-y-1/2 text-white/30" }),
                                         React.createElement('input', { 
-                                            type: "text", 
-                                            placeholder: "Catalog filter...", 
-                                            value: aboutSearch,
+                                            type: "text", placeholder: "Catalog filter...", value: aboutSearch,
                                             onChange: e => setAboutSearch(e.target.value),
                                             className: "bg-white/5 border border-white/10 rounded-lg pl-6 pr-2 py-1 text-[8px] outline-none focus:border-primary transition-all w-32" 
                                         })
@@ -573,10 +555,9 @@
                             const file = e.target.files[0]; if(!file) return;
                             const reader = new FileReader();
                             reader.onload = (ev) => {
-                                const blob = new Blob([ev.target.result], { type: 'text/html' });
-                                if(blobUrl) URL.revokeObjectURL(blobUrl);
-                                const localUrl = URL.createObjectURL(blob);
-                                setBlobUrl(localUrl); setActiveUrl(localUrl); setActiveName(file.name); setShowPorter(false);
+                                const blob = new Blob([ev.target.result], { type: "text/html" });
+                                setIframeSrc(URL.createObjectURL(blob));
+                                setActiveUrl(null); setActiveName(file.name); setShowPorter(false);
                             };
                             reader.readAsText(file);
                         }})
@@ -594,21 +575,43 @@
                 ])
             ),
 
-            activeUrl && React.createElement('div', { key: 'viewport', className: "fixed inset-0 z-[1200] bg-black flex flex-col animate-fade-in" }, [
+            (iframeSrc) && React.createElement('div', { key: 'viewport', className: "fixed inset-0 z-[1200] bg-black flex flex-col animate-fade-in" }, [
                 React.createElement('div', { className: "glass p-3 flex justify-between items-center" }, [
-                    React.createElement('div', { className: "flex items-center gap-3" }, [React.createElement(Radio, { size: 14, className: "text-secondary animate-pulse" }), React.createElement('span', { className: "text-[10px] font-black uppercase tracking-widest text-secondary" }, activeName)]),
+                    React.createElement('div', { className: "flex items-center gap-3" }, [
+                        React.createElement(Radio, { size: 14, className: "text-secondary animate-pulse" }), 
+                        React.createElement('span', { className: "text-[10px] font-black uppercase tracking-widest text-secondary" }, activeName),
+                        iframeSrc.startsWith('blob:') && React.createElement('div', { className: "flex items-center gap-1 text-[8px] text-red-500 bg-red-500/10 px-2 py-0.5 rounded-full" }, [
+                            React.createElement(AlertTriangle, { size: 10 }), "MIME_FORCE_ACTIVE"
+                        ])
+                    ]),
                     React.createElement('div', { className: "flex gap-2" }, [
+                        React.createElement('button', { 
+                            title: "Fix text/plain mime issues by forcing injection",
+                            onClick: () => loadContent(activeUrl, activeName, true),
+                            className: `px-3 py-1.5 border border-white/10 rounded-lg text-[9px] font-black uppercase transition-all flex items-center gap-2 ${iframeSrc.startsWith('blob:') ? 'bg-red-500/20 text-red-500' : 'bg-white/5 text-white/60 hover:bg-white/10'}` 
+                        }, [React.createElement(RefreshCw, { size: 12 }), "MIME-Force"]),
                         React.createElement('button', { 
                             onClick: handleArchiveIframe,
                             className: "px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-[9px] font-black uppercase transition-all flex items-center gap-2" 
-                        }, [React.createElement(DownloadCloud, { size: 12 }), "Capture Source"]),
+                        }, [React.createElement(DownloadCloud, { size: 12 }), "Capture"]),
                         React.createElement('button', { onClick: handleFullscreen, className: "px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-[9px] font-black uppercase transition-all" }, "Fullscreen"),
-                        React.createElement('button', { onClick: () => { setActiveUrl(null); setBlobUrl(null); if(blobUrl) URL.revokeObjectURL(blobUrl); }, className: "p-2 bg-red-500/10 text-red-500 rounded-lg" }, React.createElement(X, { size: 16 }))
+                        React.createElement('button', { onClick: () => { setActiveUrl(null); setIframeSrc(null); }, className: "p-2 bg-red-500/10 text-red-500 rounded-lg" }, React.createElement(X, { size: 16 }))
                     ])
                 ]),
                 React.createElement('div', { className: "flex-1 relative bg-white" }, [
-                    isLoading && React.createElement('div', { className: "absolute inset-0 bg-slate-950 flex items-center justify-center z-10" }, React.createElement(Loader2, { className: "animate-spin text-primary", size: 32 })),
-                    blobUrl && React.createElement('iframe', { ref: iframeRef, src: blobUrl, key: blobUrl, className: "w-full h-full border-none", allow: "fullscreen; autoplay; encrypted-media; picture-in-picture" })
+                    isLoading && React.createElement('div', { className: "absolute inset-0 bg-slate-950 flex flex-col items-center justify-center z-10" }, [
+                        React.createElement(Loader2, { className: "animate-spin text-primary mb-3", size: 32 }),
+                        React.createElement('span', { className: "text-white text-[10px] font-black uppercase tracking-widest" }, "Applying Uplink...")
+                    ]),
+                    React.createElement('iframe', { 
+                        ref: iframeRef, 
+                        src: iframeSrc, 
+                        key: activeName, 
+                        referrerPolicy: "no-referrer",
+                        className: "w-full h-full border-none bg-white", 
+                        allow: "fullscreen; autoplay; encrypted-media; picture-in-picture; microphone; camera; clipboard-write; clipboard-read",
+                        sandbox: "allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts allow-downloads"
+                    })
                 ])
             ])
           ]);
